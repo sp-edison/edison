@@ -7,6 +7,12 @@ Construction of EDISON open platform: the construction/ offering / support of in
 provision of development and infrastructure resources of the EDISON application middleware: user authentication and management of tasks, building and EDISON user services infrastructure conjunction with the development and the super computer and high-speed research network resources provided
 </p>
 <img width="746" height="462" src="https://www.edison.re.kr/documents/10194/8702920/dn02_en.png">
-<h1>Documents</h1>
-<div>
-</div>
+<h1>Documentation</h1>
+<p>
+<ul>
+  <li>Project Setup Guide</li>
+  <li>User Guide</li>
+  <li>Class Manager Guide</li>
+  <li>App Developer Guide</li>
+</ul>
+</p>
