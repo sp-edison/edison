@@ -19,5 +19,5 @@ provision of development and infrastructure resources of the EDISON application 
 </p>
 <h1>License</h1>
 <p>
-EDISON is free and open source and it always will be! It is licensed under the <a href="https://opensource.org/licenses/GPL-3.0">GPLv3</a>.
+EDISON is free and open source and it always will be! It is licensed under the <a href="http://www.gnu.org/licenses/lgpl-2.1.html">GNU Lesser General Public License</a>.
 </p>
