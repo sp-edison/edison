@@ -17,7 +17,7 @@ provision of development and infrastructure resources of the EDISON application 
   <li><a href="https://www.edison.re.kr/documents/10194/8702920/DeveloperAPIGuide.pdf">API Document</a></li>
 </ul>
 </p>
-<h1>Documentation</h1>
+<h1>License</h1>
 <p>
 EDISON is free and open source and it always will be! It is licensed under the <a href="https://opensource.org/licenses/GPL-3.0">GPLv3</a>.
 </p>
