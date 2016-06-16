@@ -1,0 +1,71 @@
+package org.kisti.edison.service.persistence;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.kisti.edison.model.Workflow;
+import org.kisti.edison.model.impl.WorkflowImpl;
+import org.kisti.edison.util.GBatisUtil;
+
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
+import com.liferay.portal.kernel.dao.orm.Session;
+import com.liferay.portal.kernel.dao.orm.Type;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
+import com.liferay.util.dao.orm.CustomSQLUtil;
+
+public class WorkflowFinderImpl extends BasePersistenceImpl<Workflow>
+    implements WorkflowFinder{
+  public static final String GET_WORKFLOWS_HEADER =
+      WorkflowFinder.class.getName() +
+            ".retrieveWorkflows.header";
+  public static final String GET_WORKFLOWS_WHERE =
+      WorkflowFinder.class.getName() +
+            ".retrieveWorkflows.where";
+  
+  @SuppressWarnings("unchecked")
+  public List<Map<String, Object>> retrieveWorkflows(Map<String,Object> searchParam) throws SystemException{
+    StringBuilder sqlSb = new StringBuilder();
+    Session session = null;
+    try{
+      String sqlQuerySelect = CustomSQLUtil.get(GET_WORKFLOWS_HEADER);
+      String sqlQuery = CustomSQLUtil.get(GET_WORKFLOWS_WHERE);
+      sqlSb.append(sqlQuerySelect);
+      sqlSb.append(sqlQuery);
+      
+      session = openSession();
+      String gBatisQuery = GBatisUtil.getGBatis(searchParam, sqlSb.toString());
+      SQLQuery query = session.createSQLQuery(gBatisQuery);
+      query.addEntity("EDWF_Workflow", WorkflowImpl.class);
+      query.addScalar("parentTitle", Type.STRING);
+      query.addScalar("parentIsPublic", Type.BOOLEAN);
+      query.addScalar("parentUserId", Type.BOOLEAN);
+      query.addScalar("screenName", Type.STRING);
+      
+      List<Object[]> rows = (List<Object[]>) query.list();
+      List<Map<String, Object>> workflows = new ArrayList<>();
+      for(Object[] columns : rows){
+        Workflow workflow =  (Workflow)columns[0];
+        Map<String, Object> workflowMap = workflow.getModelAttributes();
+        workflowMap.put("parentTitle", columns[1]);
+        workflowMap.put("parentIsPublic", columns[2]);
+        if(workflow.getUserId() == GetterUtil.getLong(columns[3])){
+          workflowMap.put("parentIsMine", true);
+        }else{
+          workflowMap.put("parentIsMine", false);
+        }
+        workflowMap.put("screenName", columns[4]);
+        workflows.add(workflowMap);
+      }
+      
+      return workflows;
+    }catch (Exception e) {
+      e.printStackTrace();
+      throw new SystemException(e);
+    } finally {
+      closeSession(session);
+    }
+  }
+}

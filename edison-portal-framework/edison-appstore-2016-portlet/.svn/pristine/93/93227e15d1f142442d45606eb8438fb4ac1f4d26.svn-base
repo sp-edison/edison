@@ -1,0 +1,77 @@
+package org.kisti.edison.science.portlet.imageviewer;
+
+import java.io.IOException;
+import java.util.Map;
+
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
+import org.kisti.edison.model.EdisonExpando;
+import org.kisti.edison.model.EdisonMessageConstants;
+import org.kisti.edison.model.IcebreakerVcToken;
+import org.kisti.edison.util.CustomUtil;
+import org.kisti.edison.util.IcebreakerUtil;
+import org.kisti.edison.util.RequestUtil;
+
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.util.bridges.mvc.MVCPortlet;
+
+public class ScienceAppImageViewerPortlet extends MVCPortlet 
+{
+	@Override
+	public void doView(RenderRequest request, RenderResponse response) throws IOException, PortletException 
+	{
+//		String portletId = (String) request.getAttribute(WebKeys.PORTLET_ID);
+//		System.err.println(portletId);
+		
+		try 
+		{
+			@SuppressWarnings("rawtypes")
+			Map param = RequestUtil.getParameterMap(request);
+			ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+			User user = themeDisplay.getUser();
+			
+			//Group thisGroup = GroupLocalServiceUtil.getGroup(groupId);
+			//long groupId = Long.parseLong(CustomUtil.strNull(param.get("groupId"), String.valueOf(PortalUtil.getScopeGroupId(request))));
+			
+			// 사용하지 않는다
+			//long jobSeqNo = ParamUtil.getLong(request, "jobSeqNo",0);
+			String simulationUuid = CustomUtil.strNull(param.get("simulationUuid"));
+			long groupId = 20181;
+
+			//JSP 에서는 화면에 icebreakerUrl을 PUBLIC URL 로 전송
+			String publicIceBreakerUrl = (String) GroupLocalServiceUtil.getGroup(groupId).getExpandoBridge().getAttribute(EdisonExpando.SITE_ICEBREAKER_URL_PUBLIC);
+			//String icebreakerUrl = CustomUtil.strNull(thisGroup.getExpandoBridge().getAttribute(EdisonExpando.SITE_ICEBREAKER_URL));
+			String icebreakerUrl = "";
+			IcebreakerVcToken icebreakerVcToken = IcebreakerUtil.getIceBreakerToken(user, groupId);
+
+			//Test용
+			simulationUuid = "ec7e7ada-cf6f-40b5-8080-d75acdf31826";
+			icebreakerUrl = "http://150.183.247.210:8080";
+			
+			String result = IcebreakerUtil.getSimulationResult(icebreakerUrl + "/test", icebreakerVcToken.getVcToken(), simulationUuid, "result");
+			if (!CustomUtil.strNull(result).equals("")) 
+			{
+				JSONObject jsonObj = JSONFactoryUtil.createJSONObject(result);
+				JSONArray jsonArray = jsonObj.getJSONArray("files");
+				
+				request.setAttribute("icebreakerUrl",publicIceBreakerUrl);
+				request.setAttribute("resultDataList", IcebreakerUtil.sortJsonArray(jsonArray, "name").toString());
+			}
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			SessionErrors.add(request, EdisonMessageConstants.SEARCH_ERROR);
+		}
+		super.doView(request, response);
+	}
+}

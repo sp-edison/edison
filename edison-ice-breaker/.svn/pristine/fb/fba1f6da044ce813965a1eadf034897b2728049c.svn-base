@@ -1,0 +1,28 @@
+# Root logger option
+log4j.rootLogger=INFO, ecloud
+
+# Direct log messages to a log file
+log4j.appender.ecloud = org.apache.log4j.DailyRollingFileAppender
+log4j.appender.ecloud.DatePattern='.'yyyy-MM-dd
+log4j.appender.ecloud.layout = org.apache.log4j.PatternLayout
+log4j.appender.ecloud.layout.ConversionPattern=%5p | %d | %F:%L | %m%n
+#log4j.appender.ecloud.File = /home/edison/.system/LOG/logfile.log
+log4j.appender.ecloud.File = /root/LOG/logfile.log
+
+
+# Log everything. Good for troubleshooting
+#log4j.logger.org.hibernate=DEBUG
+ 
+# Log all JDBC parameters
+#log4j.logger.org.hibernate.type=ALL
+
+# =============================================================================
+# Apache Shiro
+# =============================================================================
+# Shiro security framework
+#log4j.logger.org.apache.shiro=INFO
+#log4j.logger.org.apache.shiro.realm.text.PropertiesRealm=INFO
+#log4j.logger.org.apache.shiro.cache.ehcache.EhCache=INFO
+#log4j.logger.org.apache.shiro.io=INFO
+#log4j.logger.org.apache.shiro.web.servlet=INFO
+#log4j.logger.org.apache.shiro.util.ThreadContext=INFO

@@ -1,0 +1,43 @@
+################################################################## 
+####### RESOURCE CONFIGURATION
+####### NAME : IP : PORT or "0" : JobManagerName : JobManagerVersion : Queues : TotalCores : StorageBase : Use
+##################################################################
+####### gentoo for nano
+resources=EDISON-NANO:10.183.100.100:22002:OpenPBS:3.0.5:nano:0:/EDISON/:ko:true
+
+################################################################## 
+####### NANO (KOREAN) SPECIFIC CONFIGURATION
+##################################################################
+commonstorage.basedir=./NANO/COMMON/
+data.basedir=./NANO/DATA/
+solver.basedir=./NANO/SOLVERS/
+
+################################################################## 
+####### SPYGLASS CONFIGURATION
+##################################################################
+spyglass.nano=134.75.138.53
+spyglass.port=27017
+spyglass.nanodb=nano
+
+
+################################################################## 
+####### PARALLEL ENVIRONMENTS
+##################################################################
+mpirun.path=/opt/mpi/intel/mpich-1.2.7p1/
+gcc.openmpi.path=/SYSTEM/gnu-openmpi-1.6.5/build/
+intel.openmpi.path=/SYSTEM/intel-openmpi-1.6.5/build/
+
+################################################################## 
+####### Number of Cores per VM or PM
+##################################################################
+nCores=6
+
+##################################################################
+####### BACKUP STORAGE CONFIGURATION
+##################################################################
+backup.basedir=/BACKUP/NANO/2014/
+
+##################################################################
+####### LOCAL ACCOUNTS SETTING
+##################################################################
+accounts=EDISON-NANO:root

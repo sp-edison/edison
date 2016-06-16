@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+
+<project name="test2" basedir=".">
+	
+<property name="deployer.lib" value="/home/hgkim/tomcat7-runtime/apache-tomcat-7.0.47-deployer/lib" />
+<!--
+<property name="deployer.lib" value="c:/java/apache-tomcat-7.0.47-deployer/lib" />
+-->
+
+<path id="catalina-ant-classpath">
+<fileset dir="${deployer.lib}">
+<include name="*.jar"/>
+</fileset>
+</path>
+	
+<!-- Configure the custom Ant tasks for the Manager application -->
+<taskdef name="catalina-deploy" classname="org.apache.catalina.ant.DeployTask" classpathref="catalina-ant-classpath"/>
+<taskdef name="catalina-list" classname="org.apache.catalina.ant.ListTask" classpathref="catalina-ant-classpath"/>
+<taskdef name="catalina-reload" classname="org.apache.catalina.ant.ReloadTask" classpathref="catalina-ant-classpath"/>
+<taskdef name="catalina-findleaks" classname="org.apache.catalina.ant.FindLeaksTask" classpathref="catalina-ant-classpath"/>
+<taskdef name="catalina-resources" classname="org.apache.catalina.ant.ResourcesTask" classpathref="catalina-ant-classpath"/>
+<taskdef name="catalina-start" classname="org.apache.catalina.ant.StartTask" classpathref="catalina-ant-classpath"/>
+<taskdef name="catalina-stop" classname="org.apache.catalina.ant.StopTask" classpathref="catalina-ant-classpath"/>
+<taskdef name="catalina-undeploy" classname="org.apache.catalina.ant.UndeployTask" classpathref="catalina-ant-classpath"/>
+	
+<!-- 배포 자동화 -->
+<target name="make_war">
+<war destfile="${ant.project.name}.war" webxml="org.edison.cloud/WebContent/WEB-INF/web.xml">
+<classes dir="org.edison.cloud/build/classes" />
+<lib dir="org.edison.cloud/WebContent/WEB-INF/lib" />
+<fileset dir="org.edison.cloud/WebContent">
+    <include name="**/*.*"/>
+</fileset>
+<!-- remove 
+	<fileset dir="web" />
+-->
+</war>
+</target>
+	
+<target name="server_deploy" depends="make_war">
+<catalina-deploy url="http://150.183.247.33:8080/manager/text" username="edison2" password="edison2013!!" path="/${ant.project.name}" war="${ant.project.name}.war" update="true" />
+<delete file="${ant.project.name}.war"/>
+</target>
+	
+</project>

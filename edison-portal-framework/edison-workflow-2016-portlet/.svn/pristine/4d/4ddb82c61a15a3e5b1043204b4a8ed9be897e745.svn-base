@@ -1,0 +1,672 @@
+package org.kisti.edison.wfapi.custom.model;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.map.annotate.JsonRootName;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {"uuid", "title", "userId", "accessToken", "status", "createdTime",
+    "startTime", "endTime", "simulationCount", "simulations"})
+@XmlRootElement(name = "workflow")
+@JsonRootName(value = "workflow")
+@JsonSerialize(include = Inclusion.NON_EMPTY)
+public class MWorkflow{
+  private String uuid;
+  private String title;
+  private String userId;
+  private String accessToken;
+  private String status;
+  private String createdTime;
+  private String startTime;
+  private String endTime;
+  private Integer simulationCount;
+  private String contentType;
+  private String body;
+
+  public String getContentType(){
+    return contentType;
+  }
+
+  public String getBody(){
+    return body;
+  }
+
+  private List<MWorkflow.Simulations.Simulation> simulations = new LinkedList<MWorkflow.Simulations.Simulation>();
+
+  public String getEndTime(){
+    return endTime;
+  }
+
+  public void setEndTime(String endTime){
+    this.endTime = endTime;
+  }
+
+  public String getUuid(){
+    return uuid;
+  }
+
+  public void setUuid(String value){
+    this.uuid = value;
+  }
+
+  public String getTitle(){
+    return title;
+  }
+
+  public void setTitle(String value){
+    this.title = value;
+  }
+
+  public String getUserId(){
+    return userId;
+  }
+
+  public void setUserId(String value){
+    this.userId = value;
+  }
+
+  public String getAccessToken(){
+    return accessToken;
+  }
+
+  public void setAccessToken(String value){
+    this.accessToken = value;
+  }
+
+  public String getStatus(){
+    return status;
+  }
+
+  public void setStatus(String value){
+    this.status = value;
+  }
+
+  public String getCreatedTime(){
+    return createdTime;
+  }
+
+  public void setCreatedTime(String value){
+    this.createdTime = value;
+  }
+
+  public String getStartTime(){
+    return startTime;
+  }
+
+  public void setStartTime(String value){
+    this.startTime = value;
+  }
+
+  public Integer getSimulationCount(){
+    return simulationCount;
+  }
+
+  public void setSimulationCount(Integer value){
+    this.simulationCount = value;
+  }
+
+  public List<MWorkflow.Simulations.Simulation> getSimulations(){
+    return simulations;
+  }
+
+  public void setSimulations(List<MWorkflow.Simulations.Simulation> value){
+    this.simulations = value;
+  }
+
+  @Override
+  public String toString(){
+    return "MWorkflow [uuid=" + uuid + ", title=" + title + ", userId=" + userId + ", accessToken="
+        + accessToken + ", status=" + status + ", createdTime=" + createdTime + ", startTime="
+        + startTime + ", endTime=" + endTime + ", simulationCount=" + simulationCount
+        + ", contentType=" + contentType + ", body=" + body + ", simulations=" + simulations + "]";
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @XmlType(name = "", propOrder = {"simulation"})
+  @JsonSerialize(include = Inclusion.NON_EMPTY)
+  public static class Simulations{
+
+    private List<MWorkflow.Simulations.Simulation> simulation;
+
+    public List<MWorkflow.Simulations.Simulation> getSimulation(){
+      if(simulation == null){
+        simulation = new ArrayList<MWorkflow.Simulations.Simulation>();
+      }
+      return this.simulation;
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "",
+        propOrder = {"uuid", "clientId", "ibUuid", "title", "solverId", "description",
+            "parentNodes", "childNodes", "status", "createdTime", "startTime", "endTime",
+            "jobCount", "jobs"})
+    @JsonSerialize(include = Inclusion.NON_EMPTY)
+    public static class Simulation{
+
+      private String uuid;
+      private MWorkflow mworkflow;
+      private String clientId;
+      private String ibUuid;
+      private String title;
+      private String solverId;
+      private String description;
+      private ParentNodes parentNodes;
+      private ChildNodes childNodes;
+      private String status;
+      private String createdTime;
+      private String startTime;
+      private String endTime;
+      private Integer jobCount;
+      private Long last_Update;
+      private List<MWorkflow.Simulations.Simulation.Jobs.Job> jobs = new LinkedList<MWorkflow.Simulations.Simulation.Jobs.Job>();
+
+      public String getUuid(){
+        return uuid;
+      }
+
+      public void setUuid(String value){
+        this.uuid = value;
+      }
+
+      @Override
+      public String toString(){
+        return "Simulation [uuid=" + uuid + ", mworkflow=" + mworkflow + ", clientId=" + clientId
+            + ", ibUuid=" + ibUuid + ", title=" + title + ", solverId=" + solverId
+            + ", description=" + description + ", parentNodes=" + parentNodes + ", childNodes="
+            + childNodes + ", status=" + status + ", createdTime=" + createdTime + ", startTime="
+            + startTime + ", endTime=" + endTime + ", jobCount=" + jobCount + ", last_Update="
+            + last_Update + ", jobs=" + jobs + "]";
+      }
+
+      public MWorkflow getMworkflow(){
+        return mworkflow;
+      }
+
+      public void setMworkflow(MWorkflow mworkflow){
+        this.mworkflow = mworkflow;
+      }
+
+      public String getClientId(){
+        return clientId;
+      }
+
+      public void setClientId(String value){
+        this.clientId = value;
+      }
+
+      public String getIbUuid(){
+        return ibUuid;
+      }
+
+      public void setIbUuid(String ibUuid){
+        this.ibUuid = ibUuid;
+      }
+
+      public String getTitle(){
+        return title;
+      }
+
+      public void setTitle(String value){
+        this.title = value;
+      }
+
+      public String getSolverId(){
+        return solverId;
+      }
+
+      public void setSolverId(String value){
+        this.solverId = value;
+      }
+
+      public String getDescription(){
+        return description;
+      }
+
+      public void setDescription(String description){
+        this.description = description;
+      }
+
+      public ParentNodes getParentNodes(){
+        return parentNodes;
+      }
+
+      public void setParentNodes(ParentNodes parentNodes){
+        this.parentNodes = parentNodes;
+      }
+
+      public ChildNodes getChildNodes(){
+        return childNodes;
+      }
+
+      public void setChildNodes(ChildNodes childNodes){
+        this.childNodes = childNodes;
+      }
+
+      public String getStatus(){
+        return status;
+      }
+
+      public void setStatus(String value){
+        this.status = value;
+      }
+
+      public String getCreatedTime(){
+        return createdTime;
+      }
+
+      public void setCreatedTime(String value){
+        this.createdTime = value;
+      }
+
+      public String getStartTime(){
+        return startTime;
+      }
+
+      public void setStartTime(String value){
+        this.startTime = value;
+      }
+
+      public String getEndTime(){
+        return endTime;
+      }
+
+      public void setEndTime(String value){
+        this.endTime = value;
+      }
+
+      public Integer getJobCount(){
+        return jobCount;
+      }
+
+      public void setJobCount(Integer value){
+        this.jobCount = value;
+      }
+
+      public List<MWorkflow.Simulations.Simulation.Jobs.Job> getJobs(){
+        return jobs;
+      }
+
+      public void setJobs(List<MWorkflow.Simulations.Simulation.Jobs.Job> value){
+        this.jobs = value;
+      }
+
+      public Long getLast_Update(){
+        return last_Update;
+      }
+
+      public void setLast_Update(Long last_Update){
+        this.last_Update = last_Update;
+      }
+
+      @XmlAccessorType(XmlAccessType.FIELD)
+      @XmlType(name = "", propOrder = {"parentNode"})
+      @JsonSerialize(include = Inclusion.NON_EMPTY)
+      public static class ParentNodes{
+        private List<String> parentNode;
+
+        public List<String> getParentNode(){
+          if(parentNode == null){
+            parentNode = new ArrayList<String>();
+          }
+          return this.parentNode;
+        }
+
+        public void setParentNode(List<String> parentNode){
+          this.parentNode = parentNode;
+        }
+      }
+
+      @XmlAccessorType(XmlAccessType.FIELD)
+      @XmlType(name = "", propOrder = {"childNode"})
+      @JsonSerialize(include = Inclusion.NON_EMPTY)
+      public static class ChildNodes{
+        private List<String> childNode;
+
+        public List<String> getChildNode(){
+          if(childNode == null){
+            childNode = new ArrayList<String>();
+          }
+          return this.childNode;
+        }
+
+        public void setChildNode(List<String> childNode){
+          this.childNode = childNode;
+        }
+      }
+
+      @XmlAccessorType(XmlAccessType.FIELD)
+      @XmlType(name = "", propOrder = {"job"})
+      @JsonSerialize(include = Inclusion.NON_EMPTY)
+      public static class Jobs{
+
+        private List<MWorkflow.Simulations.Simulation.Jobs.Job> job;
+
+        public List<MWorkflow.Simulations.Simulation.Jobs.Job> getJob(){
+          if(job == null){
+            job = new ArrayList<MWorkflow.Simulations.Simulation.Jobs.Job>();
+          }
+          return this.job;
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "",
+            propOrder = {"uuid", "ibUuid", "solverId", "type", "category", "title", "description",
+                "executable", "files", "cluster", "execution", "status", "submittedTime",
+                "startTime", "endTime"})
+        @JsonSerialize(include = Inclusion.NON_EMPTY)
+        public static class Job{
+
+          public static enum JobCategory{
+            GAMESS_PARALLEL, GNU_OPENMP_MPI, GNU_MPICH_1, GNU_MPICH_2, GNU_OPENMPI_1_4, GNU_OPENMP, INTEL_OPENMP_MPI, INTEL_MPICH_1, INTEL_MPICH_2, INTEL_OPENMPI_1_4, INTEL_OPENMP
+          }
+
+          private String uuid;
+          private MWorkflow.Simulations.Simulation msimulation;
+          private String ibUuid;
+          private String solverId;
+          private String solverName;
+          private String type;
+          private JobCategory category;
+          private String title;
+          private String description;
+          private String executable;
+          private MWorkflow.Simulations.Simulation.Jobs.Job.Files files;
+          private String cluster;
+          private String execution;
+          private String status;
+          private String submittedTime;
+          private String startTime;
+          private String endTime;
+          private HashMap<String, String> attributes;
+          private String attrStr;
+          private HashMap<String, String> dependencies;
+          private String dependenciesStr;
+          private String cyberLabId;
+          private String classId;
+          private Long last_Update;
+
+          public Long getLast_Update(){
+            return last_Update;
+          }
+
+          public void setLast_Update(Long last_Update){
+            this.last_Update = last_Update;
+          }
+
+          public String getUuid(){
+            return uuid;
+          }
+
+          public void setUuid(String value){
+            this.uuid = value;
+          }
+
+          public String getIbUuid(){
+            return ibUuid;
+          }
+
+          public void setIbUuid(String value){
+            this.ibUuid = value;
+          }
+
+          public String getType(){
+            return type;
+          }
+
+          public void setType(String value){
+            this.type = value;
+          }
+
+          public String getTitle(){
+            return title;
+          }
+
+          public void setTitle(String value){
+            this.title = value;
+          }
+
+          public String getDescription(){
+            return description;
+          }
+
+          public void setDescription(String value){
+            this.description = value;
+          }
+
+          public String getExecutable(){
+            return executable;
+          }
+
+          public void setExecutable(String value){
+            this.executable = value;
+          }
+
+          public MWorkflow.Simulations.Simulation.Jobs.Job.Files getFiles(){
+            return files;
+          }
+
+          public void setFiles(MWorkflow.Simulations.Simulation.Jobs.Job.Files value){
+            this.files = value;
+          }
+
+          public String getCluster(){
+            return cluster;
+          }
+
+          public void setCluster(String value){
+            this.cluster = value;
+          }
+
+          public String getExecution(){
+            return execution;
+          }
+
+          public void setExecution(String value){
+            this.execution = value;
+          }
+
+          public String getStatus(){
+            return status;
+          }
+
+          public void setStatus(String value){
+            this.status = value;
+          }
+
+          public String getSubmittedTime(){
+            return submittedTime;
+          }
+
+          public void setSubmittedTime(String value){
+            this.submittedTime = value;
+          }
+
+          public String getStartTime(){
+            return startTime;
+          }
+
+          public void setStartTime(String value){
+            this.startTime = value;
+          }
+
+          public String getEndTime(){
+            return endTime;
+          }
+
+          public void setEndTime(String value){
+            this.endTime = value;
+          }
+
+          @XmlJavaTypeAdapter(value = HashMapAdapter.class)
+          public HashMap<String, String> getAttributes(){
+            return attributes;
+          }
+
+          public void setAttributes(HashMap<String, String> attributes){
+            this.attributes = attributes;
+          }
+
+          public String getAttrStr(){
+            return attrStr;
+          }
+
+          public void setAttrStr(String attrStr){
+            this.attrStr = attrStr;
+          }
+
+          public String getSolverId(){
+            return solverId;
+          }
+
+          public void setSolverId(String solverId){
+            this.solverId = solverId;
+          }
+
+          public String getSolverName(){
+            return solverName;
+          }
+
+          public void setSolverName(String solverName){
+            this.solverName = solverName;
+          }
+
+          public JobCategory getCategory(){
+            return category;
+          }
+
+          public void setCategory(JobCategory category){
+            this.category = category;
+          }
+
+          public String getCyberLabId(){
+            return cyberLabId;
+          }
+
+          public void setCyberLabId(String cyberLabId){
+            this.cyberLabId = cyberLabId;
+          }
+
+          public String getClassId(){
+            return classId;
+          }
+
+          public void setClassId(String classId){
+            this.classId = classId;
+          }
+
+          @XmlJavaTypeAdapter(value = HashMapAdapter.class)
+          public HashMap<String, String> getDependencies(){
+            return dependencies;
+          }
+
+          public void setDependencies(HashMap<String, String> dependencies){
+            this.dependencies = dependencies;
+          }
+
+          public String getDependenciesStr(){
+            return dependenciesStr;
+          }
+
+          public void setDependenciesStr(String dependenciesStr){
+            this.dependenciesStr = dependenciesStr;
+          }
+
+          public MWorkflow.Simulations.Simulation getMsimulation(){
+            return msimulation;
+          }
+
+          public void setMsimulation(MWorkflow.Simulations.Simulation msimulation){
+            this.msimulation = msimulation;
+          }
+
+          @Override
+          public String toString(){
+            return "Job [uuid=" + uuid + ", msimulation=" + msimulation + ", ibUuid=" + ibUuid
+                + ", solverId=" + solverId + ", solverName=" + solverName + ", type=" + type
+                + ", category=" + category + ", title=" + title + ", description=" + description
+                + ", executable=" + executable + ", files=" + files + ", cluster=" + cluster
+                + ", execution=" + execution + ", status=" + status + ", submittedTime="
+                + submittedTime + ", startTime=" + startTime + ", endTime=" + endTime
+                + ", attributes=" + attributes + ", attrStr=" + attrStr + ", dependencies="
+                + dependencies + ", dependenciesStr=" + dependenciesStr + ", cyberLabId="
+                + cyberLabId + ", classId=" + classId + ", last_Update=" + last_Update + "]";
+          }
+
+          @XmlAccessorType(XmlAccessType.FIELD)
+          @XmlType(name = "", propOrder = {"item"})
+          @JsonSerialize(include = Inclusion.NON_EMPTY)
+          public static class Files{
+
+            private List<MWorkflow.Simulations.Simulation.Jobs.Job.Files.Item> item;
+
+            public List<MWorkflow.Simulations.Simulation.Jobs.Job.Files.Item> getItem(){
+              if(item == null){
+                item = new ArrayList<MWorkflow.Simulations.Simulation.Jobs.Job.Files.Item>();
+              }
+              return this.item;
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {"key", "value"})
+            @JsonSerialize(include = Inclusion.NON_EMPTY)
+            public static class Item{
+
+              @XmlAttribute
+              private String key;
+              @XmlAttribute
+              private String value;
+              @XmlAttribute
+              private String expectedSource;
+              @XmlAttribute
+              private String expectedValue;
+
+              public String getKey(){
+                return key;
+              }
+
+              public void setKey(String value){
+                this.key = value;
+              }
+
+              public String getValue(){
+                return value;
+              }
+
+              public void setValue(String value){
+                this.value = value;
+              }
+
+              public String getExpectedSource(){
+                return expectedSource;
+              }
+
+              public void setExpectedSource(String expectedSource){
+                this.expectedSource = expectedSource;
+              }
+
+              public String getExpectedValue(){
+                return expectedValue;
+              }
+
+              public void setExpectedValue(String expectedValue){
+                this.expectedValue = expectedValue;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

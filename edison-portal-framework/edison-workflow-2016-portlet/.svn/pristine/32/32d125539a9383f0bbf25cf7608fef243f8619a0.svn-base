@@ -1,0 +1,487 @@
+<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/common/init.jsp" %>
+<%@ include file="/common/science_platform_events.jspf" %>
+<liferay-portlet:resourceURL var="getEditorPortletUrl" escapeXml="false" id="getEditorPortlet" copyCurrentRenderParameters="false"/>
+<liferay-portlet:resourceURL var="getAuthTokenUrl" escapeXml="false" id="getAuthToken" copyCurrentRenderParameters="false"/>
+<liferay-portlet:resourceURL var="getIcebreakerAccessTokenUrl" escapeXml="false" id="getIcebreakerAccessToken" copyCurrentRenderParameters="false"/>
+<script>
+var var_save_success_message = "워크플로우가 성공적으로 저장되었습니다.";
+var var_new_workflow_confirm_message = "저장하지 않은 워크플로우는 삭제됩니다. 계속 하시겠습니까?";
+var var_remove_workflow_confirm_message = "삭제된 워크플로우는 복구되지 않습니다. 삭제하시겠습니까?";
+var var_prepare_remove_workflow_message = "저장되지 않은 워크플로우를 삭제할 수 없습니다.";
+var var_success_remove_workflow_message = "워크플로우가 삭제되었습니다.";
+var var_prepare_copy_workflow_message = "저장되지 않은 워크플로우를 복사할 수 없습니다.";
+var var_success_copy_workflow_message = "워크플로우가 성공적으로 복사되었습니다.";
+var var_validation_required_message = "이 필드는 필수입니다.";
+var var_data_empty_message = "데이터가 존재하지 않습니다.";
+var var_success_run_workflow_message = "워크플로우가 실행되었습니다.";
+var var_run_workflow_save_err_message = "저장되지않은 워크플로우를 실행할 수 없습니다.";
+var contextPath = '${contextPath}';
+</script>
+<h1>워크플로우</h1>
+<div id="science-app" class="wf-container">
+  <div class="wftitlebox001">
+    <input type="text" name="worfklow-definition-name" id="worfklow-definition-name"/>
+    <span>
+      <input class="addIp button03" id="wf-new-button" value="NEW" type="button">
+      <input class="addIp button03" id="wf-save-button" value="저장" type="button">
+      <input class="addIp button03" id="wf-copy-button" value="복사" type="button">
+      <input class="addIp button03" id="wf-remove-button" value="삭제" type="button">
+      <input class="addIp button03" id="wf-run-button" value="실행" type="button">
+    </span>
+  </div>
+  <div class="lefttabm">
+    <ul>
+      <li class="on science-app">사이언스앱</li>
+      <li class="running-workflow">실행중</li>
+      <li class="my-workflow">나의워크플로우</li>
+      <li class="public-workflow">공개워크플로우</li>
+    </ul>
+  </div>
+  <div class="leftwrap wrap">
+    <div class="lefttreemenu science-app">
+      <div class="searchbox">
+        <input id="science-app-search" name="science-app-search" type="text" size="40" value="" autocomplete="off" placeholder="Science app filter">
+        <input type="button" id="keyWordB">
+      </div>
+      <div class="lefttreemenu1 wf-jstree" id="app-list">
+      </div>
+    </div>
+  </div>
+  <div class="alert"></div>
+  <div class="rightwrap">
+    <div id="wf-workflow-canvas" class="apparea wf-drop jsplumb-drag-select" >
+    </div>
+  </div>
+</div>
+
+<div id="running-workflow" class="wf-container hidden">
+  <div class="wftitlebox001">
+    <h2 class="workflow-name-h2">실행중인 워크플로우 명</h2>
+    <span>
+    </span>
+  </div>
+  <div class="lefttabm">
+    <ul>
+      <li class="science-app">사이언스앱</li>
+      <li class="running-workflow">실행중</li>
+      <li class="my-workflow">나의워크플로우</li>
+      <li class="public-workflow">공개워크플로우</li>
+    </ul>
+  </div>
+  <div class="wfconwrap wrap" style="display: none;">
+    <div class="lefttablemenu" >
+      <div class="searchbox">
+        <input id="search-running-workflow-name" name="search-running-workflow-name" type="text" size="40" value="" autocomplete="off" placeholder="워크플로우 인스턴스명으로 검색">
+        <input id="search-running-workflow-name-large-btn" type="button">
+      </div>
+      <div class="tabletopwf">
+        <select id="_edisonscienceAppstore_WAR_edisonappstoreportlet_linePerPage" name="_edisonscienceAppstore_WAR_edisonappstoreportlet_linePerPage"
+          class="selectview">
+            <option value="10">10개씩 보기</option>
+            <option value="20">20개씩 보기</option>
+            <option value="30">30개씩 보기</option>
+            <option value="40">40개씩 보기</option>
+        </select>
+      </div>
+      <div class="slideclosearrow">
+        <a class="wf-slide-toggle" href="#slide-close"><img src="${contextPath}/images/Workflow/slideclose_arrow.png" width="30" height="48"></a>
+      </div>
+      <div style="height:37px;"></div>
+      <div>
+        <div class="tablemf_list borderno">
+          <table>
+            <colgroup>
+              <col width="20%">
+              <col width="20%">
+              <col width="15%">
+              <col width="15%">
+              <col width="15%">
+              <col width="15%"> </colgroup>
+            <thead>
+              <tr>
+                <th scope="col">워크플로우 인스턴스명</th>
+                <th scope="col">워크플로우 정의</th>
+                <th scope="col">실행ID</th>
+                <th scope="col">실행상태</th>
+                <th scope="col">실행시작시간</th>
+                <th scope="col">실행종료시간</th>
+              </tr>
+            </thead>
+            <tbody class="workflow-list-tbody">
+              <tr class="bgcolor">
+                <td class="pdleft20">running work flow1</td>
+                <td class="pdleft20">나의 워크플로우 정의 1</td>
+                <td class="TC">admin</td>
+                <td class="TC">Done</td>
+                <td class="TC">2016.02.17 10:22</td>
+                <td class="TC">2016.02.17 11:22</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="running-workflow-paging"  class="paging">
+      </div>
+    </div>
+  </div>
+  
+  <div class="leftwrap wrap">
+    <div class="lefttreemenu running-workflow">
+      <div class="searchbox">
+        <input id="search-running-workflow-name-small" name="search-running-workflow-name" type="text" size="40" value="" autocomplete="off" placeholder="워크플로우 인스턴스명으로 검색">
+        <input type="button" id="search-running-workflow-name-small-btn">
+      </div>
+      <div class="openslidearrow">
+        <a class="wf-slide-toggle" href="#slide-open"><img src="${contextPath}/images/Workflow/slideopen_arrow.png" width="32" height="51"></a>
+      </div>
+      <div class="lefttreemenu1 wf-jstree">
+        <ul>
+          <li><a href="#">나의 실행 중인 워크플로우</a>
+            <ul>
+              <li><a href="#">나의 워크플로우 정의 1</a>
+                <ul>
+                  <li> <a href="#">Running Workflow2 </a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="alert"></div>
+  <div class="rightwrap">
+    <div id="running-workflow-canvas" class="right apparea" >
+    </div>
+  </div>
+</div>
+
+<div id="my-workflow" class="wf-container hidden">
+  <div class="wftitlebox001">
+    <h2 id="my-workflow-name" class="workflow-name-h2"></h2>
+    <span>
+      <input class="addIp button03" id="wf-modify-button" value="편집" type="button">
+      <input class="addIp button03" id="wf-my-copy-button" value="복사" type="button">
+    </span>
+  </div>
+  <div class="lefttabm">
+    <ul>
+      <li class="science-app">사이언스앱</li>
+      <li class="running-workflow">실행중</li>
+      <li class="my-workflow">나의워크플로우</li>
+      <li class="public-workflow">공개워크플로우</li>
+    </ul>
+  </div>
+  <div class="wfconwrap wrap" style="display: none;">
+    <div class="lefttablemenu" >
+      <div class="searchbox">
+        <input id="search-my-workflow-name-large" name="search-my-workflow-name" type="text" size="40" value="" autocomplete="off" placeholder="워크플로우 명으로 검색">
+        <input id="search-my-workflow-name-large-btn" type="button">
+      </div>
+      <div class="tabletopwf">
+        <select id="my-workflow-line-per-page" name="my-workflow-line-per-page"
+          class="selectview">
+            <option value="10">10개씩 보기</option>
+            <option value="20">20개씩 보기</option>
+            <option value="30">30개씩 보기</option>
+            <option value="40">40개씩 보기</option>
+        </select>
+      </div>
+      <div class="slideclosearrow">
+        <a class="wf-slide-toggle" href="#slide-close"><img src="${contextPath}/images/Workflow/slideclose_arrow.png" width="30" height="48"></a>
+      </div>
+      <div style="height:37px;"></div>
+      <div>
+        <div class="tablemf_list borderno">
+          <table>
+            <colgroup>
+              <col width="20%">
+              <col width="20%">
+              <col width="15%">
+              <col width="15%">
+              <col width="15%">
+              <col width="15%"> 
+            </colgroup>
+            <thead>
+              <tr>
+                <th scope="col">워크플로우명</th>
+                <th scope="col">설명</th>
+                <th scope="col">소유자</th>
+                <th scope="col">Copied from</th>
+                <th scope="col">생성시간</th>
+                <th scope="col">공개여부</th>
+              </tr>
+            </thead>
+            <tbody id="my-workflow-tbody" class="workflow-list-tbody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="my-workflow-paging" class="paging">
+      </div>
+    </div>
+  </div>
+  <div class="leftwrap wrap">
+    <div class="leftlistbox my-workflow">
+      <div class="searchbox">
+        <input id="search-my-workflow-name-small" name="search-my-workflow-name" type="text" size="40" value="" autocomplete="off" placeholder="워크플로우 명으로 검색">
+        <input type="button" id="search-my-workflow-name-small-btn">
+      </div>
+      <div class="openslidearrow">
+        <a class="wf-slide-toggle" href="#"><img src="${contextPath}/images/Workflow/slideopen_arrow.png" width="32" height="51"></a>
+      </div>
+      <div class="listboxtopsp" >
+        <div class="workflow-list-div" id="my-workflow-div">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="alert"></div>
+  <div class="rightwrap">
+    <div id="my-workflow-canvas" class="right apparea">
+    </div>
+  </div>
+</div>
+
+<div id="public-workflow" class="wf-container hidden">
+  <div class="wftitlebox001">
+    <h2 id="public-workflow-name" class="workflow-name-h2"></h2>
+    <span>
+      <input class="addIp button03" id="wf-public-copy-button" value="복사" type="button">
+    </span>
+  </div>
+  <div class="lefttabm">
+    <ul>
+      <li class="science-app">사이언스앱</li>
+      <li class="running-workflow">실행중</li>
+      <li class="my-workflow">나의워크플로우</li>
+      <li class="public-workflow">공개워크플로우</li>
+    </ul>
+  </div>
+  <div class="wfconwrap wrap" style="display: none;">
+    <div class="lefttablemenu" >
+      <div class="searchbox">
+        <input id="search-public-workflow-name-large" name="search-public-workflow-name" type="text" size="40" value="" autocomplete="off" placeholder="워크플로우 명으로 검색">
+        <input id="search-public-workflow-name-large-btn" type="button">
+      </div>
+      <div class="tabletopwf">
+        <select id="public-workflow-line-per-page" name="public-workflow-line-per-page"
+          class="selectview">
+            <option value="10">10개씩 보기</option>
+            <option value="20">20개씩 보기</option>
+            <option value="30">30개씩 보기</option>
+            <option value="40">40개씩 보기</option>
+        </select>
+      </div>
+      <div class="slideclosearrow">
+        <a class="wf-slide-toggle" href="#slide-close"><img src="${contextPath}/images/Workflow/slideclose_arrow.png" width="30" height="48"></a>
+      </div>
+      <div style="height:37px;"></div>
+      <div>
+        <div class="tablemf_list borderno">
+          <table>
+            <colgroup>
+              <col width="20%">
+              <col width="20%">
+              <col width="15%">
+              <col width="15%">
+              <col width="15%">
+              <col width="15%"> 
+            </colgroup>
+            <thead>
+              <tr>
+                <th scope="col">워크플로우명</th>
+                <th scope="col">설명</th>
+                <th scope="col">소유자</th>
+                <th scope="col">Copied from</th>
+                <th scope="col">생성시간</th>
+                <th scope="col">공개여부</th>
+              </tr>
+            </thead>
+            <tbody id="public-workflow-tbody" class="workflow-list-tbody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="public-workflow-paging" class="paging">
+      </div>
+    </div>
+  </div>
+  <div class="leftwrap wrap">
+    <div class="leftlistbox public-workflow">
+      <div class="searchbox">
+        <input id="search-public-workflow-name-small" name="search-public-workflow-name" type="text" size="40" value="" autocomplete="off" placeholder="워크플로우 명으로 검색">
+        <input type="button" id="search-public-workflow-name-small-btn">
+      </div>
+      <div class="openslidearrow">
+        <a class="wf-slide-toggle" href="#"><img src="${contextPath}/images/Workflow/slideopen_arrow.png" width="32" height="51"></a>
+      </div>
+      <div class="listboxtopsp">
+        <div class="workflow-list-div" id="public-workflow-div">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="alert"></div>
+  <div class="rightwrap">
+    <div id="public-workflow-canvas" class="right apparea" >
+    </div>
+  </div>
+</div>
+<script>
+  var isNotLoaded = true;
+  var wfPortletGlobalData = wfPortletGlobalData ? wfPortletGlobalData : {wfElements : {}};
+  function getEditorPortletUrl(portletId){
+    var url = "<%=getEditorPortletUrl%>";
+    return synchronousAjaxHelper.post(url, {"<portlet:namespace/>portletId" : portletId})["portletURL"];
+  }
+  function getAuthToken(portletId){
+    var url = "<%=getAuthTokenUrl%>";
+    return synchronousAjaxHelper.post(url, {"<portlet:namespace/>portletId" : portletId});
+  }
+  function getIcebreakerAccessToken(){
+    var url = "<%=getIcebreakerAccessTokenUrl%>";
+    return synchronousAjaxHelper.post(url, {});
+  }
+
+  //function openEditorWindow(portletId, portletTitle, taskId jsplumb, portName, token( pp_auth ), plid( 화면 plid )){
+  function popEditorWindow(editor, port, jsPlumbWindowId){
+    var portletTitle = editor["title"];
+    var portletId = editor["exeFileName"];
+    var portType = editor["editorType"];
+    var portName = port.getName();
+    var portTypeId = port.getPortTypeId();
+    var endPointId = jsPlumbWindowId + "|" + port.getName();
+    var taskId = jsPlumbWindowId;
+  	var authToken = getAuthToken(portletId);
+  	var plid = authToken["plid"];
+  	var token = authToken["authToken"];
+  	var portData;
+  	/* if(wfPortletGlobalData["wfElements"][jsPlumbWindowId]){
+  	  portData = wfPortletGlobalData["wfElements"][jsPlumbWindowId][portName];
+  	} */
+    portData = portData ? portData : "";
+  	
+  	AUI().use("liferay-portlet-url", function(a) {
+    	var renderURL = Liferay.PortletURL.createRenderURL();
+  	  	renderURL.setPortletId(portletId);
+  	  	renderURL.setPlid(plid);
+      	renderURL.setParameter("taskId", taskId);
+      	renderURL.setParameter("portName", portName);
+      	renderURL.setParameter("portletTitle", portletTitle);
+      	renderURL.setParameter("token", token);
+      	renderURL.setParameter("portTypeId", portTypeId);
+      	
+    	if(portType == "Inputdeck") {
+          renderURL.setParameter("width", 900);
+          renderURL.setParameter("height", 600);
+    	} else {
+          renderURL.setParameter("width", 400);
+          renderURL.setParameter("height", 230);
+    	}
+        renderURL.setParameter("portData", portData);
+    	openWindow(renderURL, endPointId);
+  	});
+  }
+
+  function openWindow(renderURL, endPointId){
+  	var dialogId = endPointId;
+	renderURL.setName("Popup");
+  	renderURL.setWindowState("pop_up"); 
+  	renderURL.setParameter("dialogId", dialogId);
+ 	renderURL.setParameter("workflowType", "workflow");
+  	 	
+ 	var url = renderURL.toString();
+  	Liferay.Util.openWindow({
+  		dialog: {
+  			cache: false,
+          	destroyOnClose: true,
+  			centered: true,
+  			modal: true,
+  			resizable: false,
+  			width:renderURL.params.width, 
+  			height:renderURL.params.height
+  		},
+  		id: dialogId ,
+  		title: renderURL.params.portletTitle,
+  		uri : url+ '&p_p_auth='+ renderURL.params.token
+  	});
+  }
+  
+  Liferay.provide(
+  	window,
+  	'fetchResult',
+     	function( taskId, portName, value ){
+  		var content = {
+  				taskId : taskId,
+  				portName : portName,
+  				value: value
+  		};
+  		
+  		var payload = new SciencePlatformEvent(
+  				"stringPort",
+  				SciencePlatformEvents.TYPE_BROADCAST,
+  				'<portlet:namespace/>',
+  				'',
+  				content);
+  		
+  		Liferay.fire(SciencePlatformEvents.IPC_EVENT_CONTENT_BROADCAST, payload);
+     	},
+  	['aui-base','liferay-util-window','aui-dialog-iframe-deprecated','liferay-util-window']
+  );
+  		
+  Liferay.provide(
+  	window,
+  	'closePopup',
+     	function(popupId) {
+         	var popupDialog = Liferay.Util.Window.getById(popupId);
+            popupDialog.destroy();
+     	},
+  	['aui-base','aui-dialog','aui-dialog-iframe','liferay-util-window']
+  );
+  
+  Liferay.on(SciencePlatformEvents.IPC_EVENT_CONTENT_BROADCAST, function(event){
+  	var json = event.getEventData();
+  	var jsonData = JSON.stringify(json);
+  	
+  	consoleLog.debug(event);
+  	consoleLog.debug(json);
+  	
+  	if(wfPortletGlobalData["wfElements"][json["taskId"]]){
+      wfPortletGlobalData["wfElements"][json["taskId"]][json["portName"]] = json["value"];
+    }else{
+      var portJson = {};
+      portJson[json["portName"]] = json["value"];
+      wfPortletGlobalData["wfElements"][json["taskId"]] = portJson;
+    }
+  	
+  	consoleLog.debug(wfPortletGlobalData);
+  	
+  	/* $('#<portlet:namespace/>' + json["portName"]).val(json["value"]);
+  	if(typeof json["value"] != 'undefined' && json["value"] != "") {
+  		$('#<portlet:namespace/>' + json["portName"] + '_info').text("SUCCESS").css("color", "green");
+  	} else {
+  		$('#<portlet:namespace/>' + json["portName"] + '_info').text("FAIL").css("color", "red");
+  	}
+  	$('#<portlet:namespace/>' + json["portName"] + '_info_btn').show(); */
+  });
+  	
+  function addScienceAppData(endPointId, arrData) {
+    var inputJson = $.parseJSON(JSON.stringify(arrData[0]));
+    console.log(endPointId, inputJson);
+    
+    if(typeof endPointId === 'string'){
+      var portName = endPointId.substr(endPointId.lastIndexOf("|")+1);
+      var elementId = endPointId.substr(0, (endPointId.lastIndexOf("|")));
+      if(wfPortletGlobalData["wfElements"][elementId]){
+        wfPortletGlobalData["wfElements"][elementId][portName] = inputJson;
+      }else{
+        var portJson = {};
+        portJson[portName] = inputJson;
+        wfPortletGlobalData["wfElements"][elementId] = portJson;
+      }
+    }
+  }
+</script>

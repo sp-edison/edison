@@ -1,0 +1,43 @@
+################################################################## 
+####### RESOURCE CONFIGURATION
+####### NAME : IP : PORT or "0" : JobManagerName : JobManagerVersion : Queues : TotalCores : StorageBase : Use
+##################################################################
+####### abaqus server for nap
+resources=NAP:150.183.247.50:22002:TORQUE:3.0.5:batch:0:/data/:ko:true
+
+################################################################## 
+####### NAP SPECIFIC CONFIGURATION
+##################################################################
+commonstorage.basedir=./NAP/COMMON/
+data.basedir=./NAP/DATA/
+solver.basedir=./NAP/SOLVERS/
+
+################################################################## 
+####### SPYGLASS CONFIGURATION
+##################################################################
+spyglass.nano=134.75.138.53
+spyglass.port=27017
+spyglass.nanodb=nano
+
+
+################################################################## 
+####### PARALLEL ENVIRONMENTS
+##################################################################
+mpirun.path=/opt/mpi/intel/mpich-1.2.7p1/
+gcc.openmpi.path=/SYSTEM/gnu-openmpi-1.6.5/build/
+intel.openmpi.path=/SYSTEM/intel-openmpi-1.6.5/build/
+
+################################################################## 
+####### Number of Cores per VM or PM
+##################################################################
+nCores=2
+
+##################################################################
+####### BACKUP STORAGE CONFIGURATION
+##################################################################
+backup.basedir=/BACKUP/NAP/2014/
+
+##################################################################
+####### LOCAL ACCOUNTS SETTING
+##################################################################
+accounts=NAP:root

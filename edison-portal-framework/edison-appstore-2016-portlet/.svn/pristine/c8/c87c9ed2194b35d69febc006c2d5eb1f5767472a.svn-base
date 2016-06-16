@@ -1,0 +1,196 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/common/init.jsp"%>
+<%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
+
+
+<script type="text/javascript" src="${contextPath}/js/jquery.form.min.js"></script>
+
+
+<liferay-portlet:resourceURL var="addPortTypeURL" id="addPortType" copyCurrentRenderParameters="false">
+	<portlet:param name="editor" value="${editor}"/>
+	<portlet:param name="defaultEditor" value="${defaultEditor}"/>
+	<portlet:param name="portTypeName" value="${portTypeName}"/>
+	<portlet:param name="availableLanguages" value="${availableLanguages}"/>
+	<portlet:param name="inputDeckExist" value="${inputDeckExist}"/>
+	<portlet:param name="analyzer" value="${analyzer}"/>
+	<portlet:param name="defaultAnalyzer" value="${defaultAnalyzer}"/>
+</liferay-portlet:resourceURL>
+<script type="text/javascript">
+	//inputdeck edit.jsp 에서 사용
+	var portletNameSpace = "_edisoninputDeck_WAR_edisonappstore2016portlet_";
+	var contextPath  = "${contextPath}";
+</script>
+
+<style type="text/css">
+	#port-type-add-dialog .puptrline {
+		border-bottom: solid 1px #ccc;
+	}
+	
+	#port-type-add-dialog .puptitle {
+		font-size: 17px;
+		font-weight: 600;
+		color: #334b7e;
+		padding-left: 8px;
+		padding: 10px;
+	}
+	
+	#port-type-add-dialog .puptxt {
+		font-size: 14px;
+		font-weight: 600;
+		color: #666;
+		line-height: 25px;
+		padding: 10px 0 10px 8px;
+	}
+	
+	#port-type-add-dialog .progress { position:relative; width:402px; border: 1px solid #ddd; padding: 1px; border-radius: 3px; }
+	#port-type-add-dialog .bar { background-color: #B4F5B4; width:0%; height:20px; border-radius: 3px; }
+	#port-type-add-dialog .percent { position:absolute; display:inline-block; left:48%; }
+</style>
+<div class="newWindow" style="background-color: #fff; overflow-x: hidden;overflow-y: hidden;">
+	<div class="newWheader">
+		<div class="newWtitlebox"><img src="<%=renderRequest.getContextPath()%>/images/title_newWindow.png" width="34" height="34">
+			<div class="newWtitle">
+				<liferay-ui:message key="edison-table-list-header-port-Type-add"/>
+			</div>
+		</div>
+		<div class="newWclose">
+			<img id="port-type-add-close-btn" name="port-type-add-close-btn" src="<%=renderRequest.getContextPath()%>/images/btn_closeWindow.png" width="21" height="21" style="cursor:pointer; float: right;"/>
+		</div>
+	</div>
+	
+	<div class="newWcont01">
+		<div style="width:50%; float:right; text-align:right; padding-top:15px;">
+			<input class="addIp button02_1" onclick="<portlet:namespace/>portTypeSave();return false;" value="<liferay-ui:message key='edison-button-save'/>" type="button"/>
+		</div>
+		<form name="<portlet:namespace/>portTypeForm" id="<portlet:namespace/>portTypeForm" method="POST" action="<%=addPortTypeURL%>" enctype="multipart/form-data" >
+			<aui:input name="inputdeckFormJSON" type="hidden"/>
+			<aui:input name="sampleFilePath" type="hidden"/>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" class="data" >
+				<colgroup>
+					<col width="15%">
+					<col width="20%">
+					<col width="*">
+				</colgroup>
+				<tr class="puptrline">
+					<td class="puptitle"><liferay-ui:message key='edison-table-list-header-port-Type-name'/></td>
+					<td colspan="2" class="puptxt">
+						<input name="name" value="${portTypeName}" type="text" class="long_field" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr class="puptrline">
+					<td class="puptitle"><liferay-ui:message key='add-sample-data'/></td>
+					<td class="puptxt">
+						<input type="file" id="<portlet:namespace/>sample_file" name="<portlet:namespace/>sample_file"/>
+						<div class="progress">
+							<div class="bar" style="width: 0%;"></div>
+							<div class="percent">0%</div>
+						</div>
+						<div id="status"></div>
+					</td>
+					<td class="puptxt" colspan="2">
+						<input class="addIp button02_1" value="file save" type="submit" id="<portlet:namespace/>fileSave"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<c:if test="${inputDeckExist}">
+			<div style="min-height: 700px;" class="inputdeck-portlet">
+				<liferay-portlet:runtime portletName="edisoninputDeck_WAR_edisonappstore2016portlet"/>
+				
+<%-- 				<liferay-util:include page='<%= "/WEB-INF/html/appmanager/inputdeck_editor.jsp" %>' servletContext="<%=this.getServletContext() %>"> --%>
+					
+<%-- 				</liferay-util:include> --%>
+			</div>
+		</c:if>
+	</div>
+	
+</div>
+
+<script type="text/javascript">
+AUI().ready(function() {
+	$("#port-type-add-close-btn").click(function() {
+		$("#port-type-add-dialog").dialog("close");
+	});
+	
+	var bar = $('.bar');
+	var percent = $('.percent');
+	var status = $('#status');
+	
+	   
+	$('#<portlet:namespace/>portTypeForm').ajaxForm({
+	    beforeSend: function() {
+	        status.empty();
+	        var percentVal = '0%';
+	        bar.width(percentVal);
+	        percent.html(percentVal);
+	    },
+	    uploadProgress: function(event, position, total, percentComplete) {
+	        var percentVal = percentComplete + '%';
+	        bar.width(percentVal)
+	        percent.html(percentVal);
+	    },
+	    success: function(msg) {
+	        var percentVal = '100%';
+	        bar.width(percentVal)
+	        percent.html(percentVal);
+	    },
+		complete: function(xhr) {
+			var out =  $.parseJSON(xhr.responseText);
+			var fileEntryId = out.fileEntryId;
+			var title = out.title;
+			
+			<portlet:namespace/>portTypeForm.<portlet:namespace/>sampleFilePath.value = out.fileEntryId;
+			
+			<portlet:namespace/>showFile(fileEntryId,title);
+		}
+	}); 
+});
+
+function <portlet:namespace/>showFile(fileEntryId,title){
+	$("#<portlet:namespace/>fileSave").hide();
+	
+	$status = $('#status')
+	$("<div/>").addClass("down_date potyTypeFile")
+			   .attr("onclick","<portlet:namespace/>fileDownload('"+fileEntryId+"')")
+			   .css("cursor","pointer")
+			   .css("display","inline-block")
+			   .html(title)
+			   .appendTo($status);
+
+	$("<img/>").attr("src","${contextPath}/images/icon_dustbin.png")
+			   .addClass("potyTypeFile")
+			   .attr("width","13")
+			   .attr("height","14")
+			   .css("cursor","pointer")
+			   .attr("onclick","<portlet:namespace/>deleteFile('"+fileEntryId+"','portType','potyTypeFile')")
+			   .appendTo($status);
+}
+
+function <portlet:namespace/>portTypeSave(){
+	if(confirm(Liferay.Language.get('would-you-like-to-save'))){
+		
+		if("${inputDeckExist}"=="true"){
+			<portlet:namespace/>portTypeForm.<portlet:namespace/>inputdeckFormJSON.value = JSON.stringify(inputdeckForm);
+		}
+		
+		var addForm = $("form[name=<portlet:namespace/>portTypeForm]").serialize();
+		jQuery.ajax({
+			type: "POST",
+			url: "<%=addPortTypeURL%>",
+			async : false,
+			data : addForm,
+			success: function(msg) {
+				alert(Liferay.Language.get('edison-data-insert-success'));
+				$("#port-type-add-dialog").dialog("close");
+			},error:function(jqXHR, textStatus, errorThrown){
+				if(jqXHR.responseText !== ''){
+					alert(textStatus+": "+jqXHR.responseText);
+				}else{
+					alert(textStatus+": "+errorThrown);
+				}  
+			}
+		});
+		
+	}
+}
+</script>

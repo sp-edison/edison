@@ -1,0 +1,46 @@
+################################################################## 
+####### RESOURCE CONFIGURATION
+####### NAME : IP : PORT or "0" : JobManagerName : JobManagerVersion : Queues : TotalCores : StorageBase : Use
+##################################################################
+####### macaroni for nano (en)
+resources=vCluster:150.183.247.246:0:TORQUE:3.0.5:batch:16:/EDISON/:true
+#resources=Tachyon:150.183.147.215:7942:SGE:6.0.1:normal:3008:/work01/EDISON/:false
+
+################################################################## 
+####### NANO (EN) SPECIFIC CONFIGURATION
+##################################################################
+commonstorage.basedir=./NANO/COMMON/
+data.basedir=./NANO/DATA-EN/
+solver.basedir=./NANO/SOLVERS/
+
+################################################################## 
+####### SPYGLASS CONFIGURATION
+##################################################################
+spyglass.nano=134.75.138.53
+spyglass.port=27017
+spyglass.nanodb=nano
+
+
+################################################################## 
+####### PARALLEL ENVIRONMENTS
+##################################################################
+mpirun.path=/opt/mpi/intel/mpich-1.2.7p1/
+gcc.openmpi.path=/SYSTEM/gnu-openmpi-1.6.5/build/
+intel.openmpi.path=/SYSTEM/intel-openmpi-1.6.5/build/
+
+
+################################################################## 
+####### Number of Cores per VM or PM
+##################################################################
+nCores=4
+
+##################################################################
+####### BACKUP STORAGE CONFIGURATION
+##################################################################
+backup.basedir=/BACKUP/NANO-EN/2013Fall/
+
+
+##################################################################
+####### LOCAL ACCOUNTS SETTING
+##################################################################
+accounts=vCluster:root

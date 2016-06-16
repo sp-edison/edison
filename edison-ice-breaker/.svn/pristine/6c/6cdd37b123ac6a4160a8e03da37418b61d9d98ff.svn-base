@@ -1,0 +1,39 @@
+############### clusters information
+# NAME : IP : PORT or "0" : JobManagerName : JobManagerVersion : Queues : TotalCores : StorageBase : Use
+#resources=vCluster:150.183.247.33:0:TORQUE:3.0.5:batch:4:/EDISON/:true
+resources=vCluster2:150.183.234.69:22002:PBS:3.0.5:batch:4:/EDISON/:true
+#resources=Tachyon:10.183.52.1:22:SGE:6.0.1:normal:4:/EDISON/:true
+resources=LoadLeveler:134.75.138.64:22002:LoadL:4.1.1.14:kisti.kim:4:/EDISON/:true
+
+
+############### KISTI-TEST ###################
+commonstorage.basedir=./TEST/COMMON
+data.basedir=./TEST/DATA
+solver.basedir=./TEST/SOLVERS
+
+################################################################## 
+####### SPYGLASS CONFIGURATION
+##################################################################
+spyglass.nano=134.75.138.53
+spyglass.port=27017
+spyglass.nanodb=nano
+
+
+################################################################## 
+####### PARALLEL ENVIRONMENTS
+##################################################################
+mpirun.path=/opt/mpi/intel/mpich-1.2.7p1/bin
+gcc.openmpi.path=/SYSTEM/openmpi-1.6.5/build
+intel.openmpi.path=/SYSTEM/openmpi-1.6.5/build
+
+
+################################################################## 
+####### Number of Cores per VM or PM
+##################################################################
+nCores=8
+
+
+##################################################################
+####### BACKUP STORAGE CONFIGURATION
+##################################################################
+backup.basedir=/BACKUP/KISTI-TEST

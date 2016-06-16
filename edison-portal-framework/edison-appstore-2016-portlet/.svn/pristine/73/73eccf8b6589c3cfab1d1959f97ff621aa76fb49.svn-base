@@ -1,0 +1,142 @@
+package org.kisti.edison.science.portlet.onedplotviewer;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
+import org.kisti.edison.util.CustomUtil;
+
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.util.bridges.mvc.MVCPortlet;
+
+public class OneDPlotViewerPortlet extends MVCPortlet {
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void doView(RenderRequest request, RenderResponse response) throws IOException, PortletException 
+	{
+		String portletId = (String) request.getAttribute(WebKeys.PORTLET_ID);
+		System.err.println(portletId);
+		
+		/*
+		try 
+		{
+			Map param = RequestUtil.getParameterMap(request);
+			ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+			User user = themeDisplay.getUser();
+			
+			//long groupId = Long.parseLong(CustomUtil.strNull(param.get("groupId"), String.valueOf(PortalUtil.getScopeGroupId(request))));
+			//Group thisGroup = GroupLocalServiceUtil.getGroup(groupId);
+			
+			// 사용하지 않는다
+			//long jobSeqNo = ParamUtil.getLong(request, "jobSeqNo",0);
+			String simulationUuid = CustomUtil.strNull(param.get("simulationUuid"));
+			long groupId = 20181;
+
+			//JSP 에서는 화면에 icebreakerUrl을 PUBLIC URL 로 전송
+			String publicIceBreakerUrl = (String) GroupLocalServiceUtil.getGroup(groupId).getExpandoBridge().getAttribute(EdisonExpando.SITE_ICEBREAKER_URL_PUBLIC);
+			//String icebreakerUrl = CustomUtil.strNull(thisGroup.getExpandoBridge().getAttribute(EdisonExpando.SITE_ICEBREAKER_URL));
+			String icebreakerUrl = "";
+			
+			IcebreakerVcToken icebreakerVcToken = IcebreakerUtil.getIceBreakerToken(user, groupId);
+
+			//Test용
+			simulationUuid = "2a4530a4-52cc-4f26-bec2-87ead3e49e41";
+			icebreakerUrl = "http://150.183.247.210:8080";
+			
+			String result = IcebreakerUtil.getSimulationResult(icebreakerUrl + "/test", icebreakerVcToken.getVcToken(), simulationUuid, "result");
+			if (!CustomUtil.strNull(result).equals("")) 
+			{
+				JSONObject jsonObj = JSONFactoryUtil.createJSONObject(result);
+				JSONArray jsonArray = jsonObj.getJSONArray("files");
+				
+				request.setAttribute("icebreakerUrl",publicIceBreakerUrl);
+				request.setAttribute("resultDataList", IcebreakerUtil.sortJsonArray(jsonArray, "name").toString());
+			}
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			SessionErrors.add(request, EdisonMessageConstants.SEARCH_ERROR);
+		}
+		*/
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+		JSONObject jsonObj = JSONFactoryUtil.createJSONObject();
+		jsonObj.put("id", "http://localhost:8081/documents/20194/0/band_V00.oned");
+		jsonObj.put("name", "test01");
+		jsonObj.put("rawdata", getResultRead("http://localhost:8081/documents/20194/0/band_V00.oned"));
+		jsonArray.put(jsonObj);
+		
+		jsonObj = JSONFactoryUtil.createJSONObject();
+		jsonObj.put("id", "http://localhost:8081/documents/20194/0/band_V01.oned");
+		jsonObj.put("name", "test02");
+		jsonObj.put("rawdata", getResultRead("http://localhost:8081/documents/20194/0/band_V01.oned"));
+		jsonArray.put(jsonObj);
+		
+		jsonObj = JSONFactoryUtil.createJSONObject();
+		jsonObj.put("id", "http://localhost:8081/documents/20194/0/band_V02.oned");
+		jsonObj.put("name", "test03");
+		jsonObj.put("rawdata", getResultRead("http://localhost:8081/documents/20194/0/band_V02.oned"));
+		jsonArray.put(jsonObj);
+		
+		jsonObj = JSONFactoryUtil.createJSONObject();
+		jsonObj.put("id", "http://localhost:8081/documents/20194/0/band_V03.oned");
+		jsonObj.put("name", "test04");
+		jsonObj.put("rawdata", getResultRead("http://localhost:8081/documents/20194/0/band_V03.oned"));
+		jsonArray.put(jsonObj);
+		
+		request.setAttribute("resultDataList", jsonArray.toString());
+		super.doView(request, response);
+	}
+	
+	public String getResultRead(String readUrl) throws IOException{
+	//public String getResultRead(String icebreakerUrl, String vcToken, String fileId) throws IOException{
+		String resultText = "";
+		//if(!CustomUtil.strNull(vcToken).equals("")){
+			//URL url = new URL(icebreakerUrl+"/api/file/download?id="+CustomUtil.strNull(fileId));
+			URL url = new URL(readUrl);
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setDoOutput(true);
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Accept", "text/plain");
+			conn.setRequestProperty("Content-Type", "application/xml");
+			
+			//GET Token
+			//conn.setRequestProperty("Authorization", "Basic "+CustomUtil.strNull(vcToken));
+			
+			if (conn.getResponseCode() == 200) {
+				BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+				String  output = "";		
+				StringBuffer responseBuffer = new StringBuffer();
+				while ((output = br.readLine()) != null) {
+					if(!CustomUtil.strNull(output).equals("null")){
+						responseBuffer.append(CustomUtil.strNull(output)+"\n");	
+					}
+				}	
+				resultText = responseBuffer.toString();
+			}else if (conn.getResponseCode() == 400) {
+				System.out.println("Failed IcebreakerService [ getResultRead ] : BAD REQUEST : wrong body content - HTTP error code : " + conn.getResponseCode());		
+			}else if (conn.getResponseCode() == 413) {
+				System.out.println("Failed IcebreakerService [ getResultRead ] : REQUEST ENTITY TO LARGE : 10MBytes Limit - HTTP error code : " + conn.getResponseCode());		
+			}else{			
+				System.out.println("Failed IcebreakerService [ getResultRead ] : ETC : etc error - HTTP error code : " + conn.getResponseCode());
+			}
+			
+			conn.disconnect();		
+		//}else{
+		//	System.out.println("Failed IcebreakerService [ getResultRead ] : Token is NOT NULL - Request error code : 999");
+		//}
+		
+		return resultText;
+	}
+}

@@ -1,0 +1,422 @@
+package org.kisti.edison.wfapi.custom.model;
+
+import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+import org.codehaus.jackson.map.annotate.JsonRootName;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+@SuppressWarnings("unused")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {"uuid", "title", "userId", "accessToken", "status", "createdTime",
+    "startTime", "endTime", "simulationCount", "simulations"})
+@XmlRootElement(name = "workflow")
+@JsonRootName(value = "workflow")
+@JsonSerialize(include = Inclusion.NON_EMPTY)
+public class Workflow{
+
+  private String uuid;
+  private String title;
+  private String userId;
+  private String accessToken;
+  private String status;
+  private String createdTime;
+  private String startTime;
+  private String endTime;
+  private Integer simulationCount;
+  private Workflow.Simulations simulations;
+
+  protected Workflow(){
+  }
+
+  public Workflow(String uuid, String title, String userId, String accessToken, String status,
+      String createdTime, String startTime, String endTime, Integer simulationCount,
+      Simulations simulations){
+    this.uuid = uuid;
+    this.title = title;
+    this.userId = userId;
+    this.accessToken = accessToken;
+    this.status = status;
+    this.createdTime = createdTime;
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.simulationCount = simulationCount;
+    this.simulations = simulations;
+  }
+
+  public String getEndTime(){
+    return endTime;
+  }
+
+  public String getUuid(){
+    return uuid;
+  }
+
+  public String getTitle(){
+    return title;
+  }
+
+  public String getUserId(){
+    return userId;
+  }
+
+  public String getAccessToken(){
+    return accessToken;
+  }
+
+  public String getStatus(){
+    return status;
+  }
+
+  public String getCreatedTime(){
+    return createdTime;
+  }
+
+  public String getStartTime(){
+    return startTime;
+  }
+
+  public Integer getSimulationCount(){
+    return simulationCount;
+  }
+
+  public Workflow.Simulations getSimulations(){
+    return simulations;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @XmlType(name = "", propOrder = {"simulation"})
+  @JsonSerialize(include = Inclusion.NON_EMPTY)
+  public static class Simulations{
+
+    private List<Workflow.Simulations.Simulation> simulation;
+
+    private Simulations(){
+    }
+
+    public Simulations(List<Simulation> simulation){
+      this.simulation = simulation;
+    }
+
+    public List<Workflow.Simulations.Simulation> getSimulation(){
+      return simulation;
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "",
+        propOrder = {"uuid", "clientId", "ibUuid", "title", "solverId", "description",
+            "parentNodes", "childNodes", "status", "createdTime", "startTime", "endTime",
+            "jobCount", "jobs"})
+    @JsonSerialize(include = Inclusion.NON_EMPTY)
+    public static class Simulation{
+
+      private String uuid;
+      private String clientId;
+      private String ibUuid;
+      private String title;
+      private String solverId;
+      private String description;
+      private ParentNodes parentNodes;
+      private ChildNodes childNodes;
+      private String status;
+      private String createdTime;
+      private String startTime;
+      private String endTime;
+      private Integer jobCount;
+      private Workflow.Simulations.Simulation.Jobs jobs;
+
+      private Simulation(){
+      }
+
+      public Simulation(String uuid, String clientId, String ibUuid, String title, String solverId,
+          String description, ParentNodes parentNodes, ChildNodes childNodes, String status,
+          String createdTime, String startTime, String endTime, Integer jobCount, Jobs jobs){
+        this.uuid = uuid;
+        this.clientId = clientId;
+        this.ibUuid = ibUuid;
+        this.title = title;
+        this.solverId = solverId;
+        this.description = description;
+        this.parentNodes = parentNodes;
+        this.childNodes = childNodes;
+        this.status = status;
+        this.createdTime = createdTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.jobCount = jobCount;
+        this.jobs = jobs;
+      }
+
+      public String getUuid(){
+        return uuid;
+      }
+
+      public String getClientId(){
+        return clientId;
+      }
+
+      public String getIbUuid(){
+        return ibUuid;
+      }
+
+      public String getTitle(){
+        return title;
+      }
+
+      public String getSolverId(){
+        return solverId;
+      }
+
+      public String getDescription(){
+        return description;
+      }
+
+      public ParentNodes getParentNodes(){
+        return parentNodes;
+      }
+
+      public ChildNodes getChildNodes(){
+        return childNodes;
+      }
+
+      public String getStatus(){
+        return status;
+      }
+
+      public String getCreatedTime(){
+        return createdTime;
+      }
+
+      public String getStartTime(){
+        return startTime;
+      }
+
+      public String getEndTime(){
+        return endTime;
+      }
+
+      public Integer getJobCount(){
+        return jobCount;
+      }
+
+      public Workflow.Simulations.Simulation.Jobs getJobs(){
+        return jobs;
+      }
+
+      @XmlAccessorType(XmlAccessType.FIELD)
+      @XmlType(name = "", propOrder = {"parentNode"})
+      @JsonSerialize(include = Inclusion.NON_EMPTY)
+      public static class ParentNodes{
+        private List<String> parentNode;
+
+        private ParentNodes(){
+        }
+
+        public ParentNodes(List<String> parentNode){
+          this.parentNode = parentNode;
+        }
+
+        public List<String> getParentNode(){
+          return parentNode;
+        }
+      }
+
+      @XmlAccessorType(XmlAccessType.FIELD)
+      @XmlType(name = "", propOrder = {"childNode"})
+      @JsonSerialize(include = Inclusion.NON_EMPTY)
+      public static class ChildNodes{
+        private List<String> childNode;
+
+        private ChildNodes(){
+        }
+
+        public ChildNodes(List<String> childNode){
+          this.childNode = childNode;
+        }
+
+        public List<String> getChildNode(){
+          return childNode;
+        }
+      }
+
+      @XmlAccessorType(XmlAccessType.FIELD)
+      @XmlType(name = "", propOrder = {"job"})
+      @JsonSerialize(include = Inclusion.NON_EMPTY)
+      public static class Jobs{
+
+        private List<Workflow.Simulations.Simulation.Jobs.Job> job;
+
+        private Jobs(){
+        }
+
+        public Jobs(List<Job> job){
+          this.job = job;
+        }
+
+        public List<Workflow.Simulations.Simulation.Jobs.Job> getJob(){
+          return job;
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "",
+            propOrder = {"uuid", "ibUuid", "type", "title", "description", "executable", "files",
+                "cluster", "execution", "status", "submittedTime", "startTime", "endTime"})
+        @JsonSerialize(include = Inclusion.NON_EMPTY)
+        public static class Job{
+
+          private String uuid;
+          private String ibUuid;
+          private String type;
+          private String title;
+          private String description;
+          private String executable;
+          private Workflow.Simulations.Simulation.Jobs.Job.Files files;
+          private String cluster;
+          private String execution;
+          private String status;
+          private String submittedTime;
+          private String startTime;
+          private String endTime;
+
+          private Job(){
+          }
+
+          public Job(String uuid, String ibUuid, String type, String title, String description,
+              String executable, Files files, String cluster, String execution, String status,
+              String submittedTime, String startTime, String endTime){
+            this.uuid = uuid;
+            this.ibUuid = ibUuid;
+            this.type = type;
+            this.title = title;
+            this.description = description;
+            this.executable = executable;
+            this.files = files;
+            this.cluster = cluster;
+            this.execution = execution;
+            this.status = status;
+            this.submittedTime = submittedTime;
+            this.startTime = startTime;
+            this.endTime = endTime;
+          }
+
+          public String getUuid(){
+            return uuid;
+          }
+
+          public String getIbUuid(){
+            return ibUuid;
+          }
+
+          public String getType(){
+            return type;
+          }
+
+          public String getTitle(){
+            return title;
+          }
+
+          public String getDescription(){
+            return description;
+          }
+
+          public String getExecutable(){
+            return executable;
+          }
+
+          public Workflow.Simulations.Simulation.Jobs.Job.Files getFiles(){
+            return files;
+          }
+
+          public String getCluster(){
+            return cluster;
+          }
+
+          public String getExecution(){
+            return execution;
+          }
+
+          public String getStatus(){
+            return status;
+          }
+
+          public String getSubmittedTime(){
+            return submittedTime;
+          }
+
+          public String getStartTime(){
+            return startTime;
+          }
+
+          public String getEndTime(){
+            return endTime;
+          }
+
+          @XmlAccessorType(XmlAccessType.FIELD)
+          @XmlType(name = "", propOrder = {"item"})
+          @JsonSerialize(include = Inclusion.NON_EMPTY)
+          public static class Files{
+
+            private List<Workflow.Simulations.Simulation.Jobs.Job.Files.Item> item;
+
+            private Files(){
+            }
+
+            public Files(List<Item> item){
+              this.item = item;
+            }
+
+            public List<Workflow.Simulations.Simulation.Jobs.Job.Files.Item> getItem(){
+              return item;
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {"key", "value", "expectedSource", "expectedValue"})
+            @JsonSerialize(include = Inclusion.NON_EMPTY)
+            public static class Item{
+
+              @XmlAttribute
+              private String key;
+              @XmlAttribute
+              private String value;
+              @XmlAttribute
+              private String expectedSource;
+              @XmlAttribute
+              private String expectedValue;
+
+              private Item(){
+              }
+
+              public Item(String key, String value, String expectedSource, String expectedValue){
+                this.key = key;
+                this.value = value;
+                this.expectedSource = expectedSource;
+                this.expectedValue = expectedValue;
+              }
+
+              public String getKey(){
+                return key;
+              }
+
+              public String getValue(){
+                return value;
+              }
+
+              public String getExpectedSource(){
+                return expectedSource;
+              }
+
+              public String getExpectedValue(){
+                return expectedValue;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
