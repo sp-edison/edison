@@ -10,7 +10,11 @@ provision of development and infrastructure resources of the EDISON application 
 <h1>Documentation</h1>
 <p>
 <ul>
-  <li>Project Setup Guide</li>
+  <li><a href="https://www.edison.re.kr/documents/10194/8702920/SetupGuide.pdf">Project Setup Guide</a></li>
+  <li><a href="https://www.edison.re.kr/documents/10194/8702920/UserGuide.pdf">User Guide</a></li>
+  <li><a href="https://www.edison.re.kr/documents/10194/8702920/ManagerGuide-VirtualLab.pdf">Class Manager Guide</a></li>
+  <li><a href="https://www.edison.re.kr/documents/10194/8702920/DeveloperGuide.pdf">App Developer Guide</a></li>
+  <li><a href="https://www.edison.re.kr/documents/10194/8702920/DeveloperAPIGuide.pdf">API Document</a></li>
   <li>User Guide</li>
   <li>Class Manager Guide</li>
   <li>App Developer Guide</li>
